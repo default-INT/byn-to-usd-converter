@@ -13,6 +13,7 @@
     "clean": "rm -rf .output .wxt dist"
   },
   "dependencies": {
+    "@byn/adapters": "workspace:*",
     "@byn/core": "workspace:*",
     "@byn/dom-scanner": "workspace:*",
     "@byn/ui-kit": "workspace:*",

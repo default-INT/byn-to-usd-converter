@@ -6,8 +6,3 @@ export {
 } from "./patterns.js";
 
 export { createDomObserver, type DomChangeHandler } from "./observer.js";
-
-export {
-  siteAdapters,
-  type SiteAdapter,
-} from "./site-adapters/index.js";

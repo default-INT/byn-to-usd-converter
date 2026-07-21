@@ -38,6 +38,9 @@ importers:
 
   apps/extension:
     dependencies:
+      '@byn/adapters':
+        specifier: workspace:*
+        version: link:../../packages/adapters
       '@byn/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -72,6 +75,19 @@ importers:
       wxt:
         specifier: 0.19.29
         version: 0.19.29(@types/node@22.20.1)(rollup@4.62.2)
+
+  packages/adapters:
+    dependencies:
+      '@byn/core':
+        specifier: workspace:*
+        version: link:../core
+      '@byn/dom-scanner':
+        specifier: workspace:*
+        version: link:../dom-scanner
+    devDependencies:
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
 
   packages/core:
     devDependencies:

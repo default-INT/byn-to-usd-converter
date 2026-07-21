@@ -17,7 +17,7 @@ export default defineConfig({
   },
   vite: () => ({
     optimizeDeps: {
-      exclude: ["@byn/core", "@byn/dom-scanner", "@byn/ui-kit"],
+      exclude: ["@byn/adapters", "@byn/core", "@byn/dom-scanner", "@byn/ui-kit"],
     },
   }),
 });
