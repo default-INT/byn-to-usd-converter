@@ -30,3 +30,8 @@ export {
   realtTextScanRule,
   REALT_RULE_ID,
 } from "./realt/rules/text-scan.rule.js";
+export { KufarAdapter } from "./kufar/index.js";
+export {
+  kufarTextScanRule,
+  KUFAR_RULE_ID,
+} from "./kufar/rules/text-scan.rule.js";
