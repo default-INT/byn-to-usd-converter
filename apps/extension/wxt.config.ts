@@ -5,8 +5,8 @@ import { SUPPORTED_SITE_MATCHES } from "./utils/supported-sites";
 export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   manifest: {
-    name: "BYN → USD Converter",
-    description: "Converts Belarusian ruble amounts to USD on web pages",
+    name: "BYN Конвертер realt.by / re.kufar.by",
+    description: "Показывает суммы в USD на страницах realt.by, re.kufar.by и av.by по официальному курсу НБ РБ",
     version: "0.0.1",
     permissions: ["storage", "alarms"],
     host_permissions: [

@@ -54,7 +54,7 @@ export function App() {
       }}
     >
       <h1 style={{ margin: "0 0 12px", fontSize: 16, fontWeight: 600 }}>
-        USD → BYN
+        BYN → USD
       </h1>
       <RateBadge label="Official rate (НБ РБ)" value={display} />
       {error ? (
