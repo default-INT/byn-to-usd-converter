@@ -1,6 +1,7 @@
 import { createDomObserver } from "@byn/dom-scanner";
 import { resolveAdapter } from "@byn/adapters";
 import type { RateResult } from "@byn/core";
+import { createScanScheduler } from "../utils/scan-scheduler";
 import { SUPPORTED_SITE_MATCHES } from "../utils/supported-sites";
 
 interface RateResponse {
@@ -34,17 +35,17 @@ export default defineContentScript({
     let rate = await fetchRate();
     if (!rate) return;
 
-    adapter.scan(document.body, rate);
+    const scheduler = createScanScheduler({
+      getRate: () => rate,
+      scan: (root, nextRate) => adapter.scan(root, nextRate),
+      debounceMs: 80,
+      mapFollowUpMs: [100, 300],
+    });
+
+    scheduler.scanAll();
 
     createDomObserver(document.body, (roots) => {
-      if (!rate) return;
-      for (const root of roots) {
-        const scope =
-          root instanceof Element || root instanceof Document
-            ? root
-            : root.parentElement;
-        if (scope) adapter.scan(scope, rate);
-      }
+      scheduler.notify(roots);
     });
 
     browser.runtime.onMessage.addListener((message: unknown) => {
@@ -52,7 +53,7 @@ export default defineContentScript({
       if (msg?.type === "RATE_UPDATED" && msg.payload) {
         rate = msg.payload;
         adapter.restore();
-        adapter.scan(document.body, rate);
+        scheduler.scanAll();
       }
     });
   },

@@ -1,5 +1,5 @@
 import { textScanRule } from "../../common/rules/text-scan.rule.js";
-import type { PriceRule } from "../../types.js";
+import type { PriceCandidate, PriceRule } from "../../types.js";
 import {
   MARK_ATTR,
   MIRROR_ATTR,
@@ -9,14 +9,22 @@ import {
 
 export const REALT_RULE_ID = "realt-text-scan";
 
+function isInsideYmaps(candidate: PriceCandidate): boolean {
+  const el =
+    candidate.target instanceof Element
+      ? candidate.target
+      : candidate.target.parentElement;
+  return Boolean(el?.closest("ymaps"));
+}
+
 /**
- * Same locate/format as Common text-scan; USD replace uses default apply.
- * BYN mirror spans are inserted by RealtAdapter after scan.
+ * Same locate/format as Common text-scan (full "$405 435"); skips ymaps
+ * (handled by realtMapPointsRule). BYN mirrors via RealtAdapter after scan.
  */
 export const realtTextScanRule: PriceRule = {
   id: REALT_RULE_ID,
   pathMatch: ["*"],
-  locate: (root) => textScanRule.locate(root),
+  locate: (root) => textScanRule.locate(root).filter((c) => !isInsideYmaps(c)),
   format: (ctx) => textScanRule.format(ctx),
 };
 

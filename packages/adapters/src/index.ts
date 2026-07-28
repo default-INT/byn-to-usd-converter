@@ -12,7 +12,7 @@ export {
 } from "./types.js";
 
 export { matchesPath, getPathname } from "./path-match.js";
-export { formatUsdCompact, formatBynCompact } from "./format.js";
+export { formatUsdCompact, formatUsdK, formatBynCompact } from "./format.js";
 export {
   createUsdSpan,
   defaultApplyElement,
@@ -30,6 +30,11 @@ export {
   realtTextScanRule,
   REALT_RULE_ID,
 } from "./realt/rules/text-scan.rule.js";
+export {
+  realtMapPointsRule,
+  REALT_MAP_POINTS_RULE_ID,
+  finishRealtMapPoints,
+} from "./realt/rules/map-points.rule.js";
 export { KufarAdapter } from "./kufar/index.js";
 export {
   kufarTextScanRule,

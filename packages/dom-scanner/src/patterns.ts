@@ -7,11 +7,25 @@ export interface MoneyMatch {
   index: number;
 }
 
-/** Matches forms like "100 BYN", "Br 100", "100 000 р.", "100 руб.", "$100". */
+/** Matches forms like "100 BYN", "Br 100", "100 000 р.", "573 т.р.", "1,3 млн р.", "$100". */
 export const MONEY_PATTERNS: ReadonlyArray<{
   currency: DetectedCurrency;
   regex: RegExp;
+  /** Multiply parsed number (e.g. 1000 for "т.р.", 1e6 for "млн"). */
+  multiplier?: number;
 }> = [
+  {
+    currency: "BYN",
+    // "573 т.р.", "от 573 т.р." — thousands of rubles
+    regex: /(?:от\s+)?(\d[\d\s.,]*)\s*т\.?\s*р\.?/gi,
+    multiplier: 1_000,
+  },
+  {
+    currency: "BYN",
+    // "1,3 млн р.", "от 1,3 млн р.", "2 млн руб."
+    regex: /(?:от\s+)?(\d[\d\s.,]*)\s*млн\.?\s*(?:р\.?|руб\.?)/gi,
+    multiplier: 1_000_000,
+  },
   {
     currency: "BYN",
     // "р." / "р" after amount (e.g. "100 000 р.") — common BYN shorthand
@@ -40,7 +54,7 @@ function parseAmount(raw: string): number | null {
 export function findMoneyInText(text: string): MoneyMatch[] {
   const matches: MoneyMatch[] = [];
 
-  for (const { currency, regex } of MONEY_PATTERNS) {
+  for (const { currency, regex, multiplier = 1 } of MONEY_PATTERNS) {
     const re = new RegExp(regex.source, regex.flags);
     let m: RegExpExecArray | null;
     while ((m = re.exec(text)) !== null) {
@@ -49,7 +63,7 @@ export function findMoneyInText(text: string): MoneyMatch[] {
       if (amount === null) continue;
       matches.push({
         raw: m[0],
-        amount,
+        amount: amount * multiplier,
         currency,
         index: m.index,
       });
