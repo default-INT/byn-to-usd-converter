@@ -4,5 +4,5 @@ export const SUPPORTED_SITE_MATCHES = [
   "*://realt.by/*",
   "*://www.realt.by/*",
   "*://av.by/*",
-  "*://www.av.by/*",
+  "*://*.av.by/*",
 ] as const;

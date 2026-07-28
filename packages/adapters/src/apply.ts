@@ -1,5 +1,11 @@
 import type { FormatContext, PriceCandidate, PriceRule } from "./types.js";
-import { MARK_ATTR, MIRROR_ATTR, ORIGINAL_ATTR, RULE_ATTR } from "./types.js";
+import {
+  MARK_ATTR,
+  MIRROR_ATTR,
+  ORIGINAL_ATTR,
+  ORIGINAL_HTML_ATTR,
+  RULE_ATTR,
+} from "./types.js";
 
 export function createUsdSpan(
   original: string,
@@ -113,6 +119,16 @@ export function removeBynMirrors(root: ParentNode = document): void {
 }
 
 export function restoreConverted(root: ParentNode = document): void {
+  // Restore container-level replacements first (keeps the host element).
+  queryMarked(root, `[${MARK_ATTR}][${ORIGINAL_HTML_ATTR}]`).forEach((el) => {
+    const originalHtml = el.getAttribute(ORIGINAL_HTML_ATTR);
+    el.innerHTML = originalHtml ?? "";
+    el.removeAttribute(MARK_ATTR);
+    el.removeAttribute(ORIGINAL_ATTR);
+    el.removeAttribute(ORIGINAL_HTML_ATTR);
+    el.removeAttribute(RULE_ATTR);
+  });
+
   removeBynMirrors(root);
 
   queryMarked(root, `[${MARK_ATTR}]`).forEach((el) => {

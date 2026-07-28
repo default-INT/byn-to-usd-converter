@@ -49,3 +49,5 @@ export const ORIGINAL_ATTR = "data-byn-original";
 export const RULE_ATTR = "data-byn-rule";
 /** Sibling label with original BYN (e.g. Realt `text-basic` span). */
 export const MIRROR_ATTR = "data-byn-mirror";
+/** Full original innerHTML for container-level replacements (e.g. Av.by). */
+export const ORIGINAL_HTML_ATTR = "data-byn-original-html";
