@@ -1,3 +1,4 @@
+import { findMoneyInText } from "@byn/dom-scanner";
 import { textScanRule } from "../../common/rules/text-scan.rule.js";
 import type { PriceCandidate, PriceRule } from "../../types.js";
 import {
@@ -9,12 +10,27 @@ import {
 
 export const REALT_RULE_ID = "realt-text-scan";
 
+const LARGE_AMOUNT = 1_000_000;
+
 function isInsideYmaps(candidate: PriceCandidate): boolean {
   const el =
     candidate.target instanceof Element
       ? candidate.target
       : candidate.target.parentElement;
   return Boolean(el?.closest("ymaps"));
+}
+
+function amountOf(text: string, currency: "BYN" | "USD"): number {
+  return (
+    findMoneyInText(text).find((m) => m.currency === currency)?.amount ?? 0
+  );
+}
+
+function getSizeClass(byn: number, usd: number, parent: HTMLElement) {
+  if (byn > LARGE_AMOUNT && usd > LARGE_AMOUNT) return "text-disclaimer";
+  if (byn > LARGE_AMOUNT || usd > LARGE_AMOUNT || parent.children.length > 3) return "text-caption";
+
+  return "text-subhead";
 }
 
 /**
@@ -51,8 +67,13 @@ export function insertRealtBynMirrors(root: ParentNode): void {
     // BYN is shown in the mirror; drop native tooltip.
     usdEl.removeAttribute("title");
 
+    const amountByn = amountOf(original, "BYN");
+    const amountUsd = amountOf(usdEl.textContent ?? "", "USD");
+    
+    const sizeClass = getSizeClass(amountByn, amountUsd, parent);
+
     const bynSpan = document.createElement("span");
-    bynSpan.className = "text-basic pl-0.5 text-subhead";
+    bynSpan.className = `text-basic pl-0.5 ${sizeClass}`;
     bynSpan.setAttribute(MIRROR_ATTR, "true");
     bynSpan.textContent = ` = ${original}`;
     parent.insertAdjacentElement("afterend", bynSpan);

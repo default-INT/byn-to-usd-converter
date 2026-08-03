@@ -7,7 +7,7 @@ export interface MoneyMatch {
   index: number;
 }
 
-/** Matches forms like "100 BYN", "Br 100", "100 000 р.", "573 т.р.", "1,3 млн р.", "$100". */
+/** Matches forms like "100 BYN", "Br 100", "100 000 р.", "262 000 ƃ", "573 т.р.", "203 т. ƃ", "1,3 млн р.", "$100". */
 export const MONEY_PATTERNS: ReadonlyArray<{
   currency: DetectedCurrency;
   regex: RegExp;
@@ -16,20 +16,21 @@ export const MONEY_PATTERNS: ReadonlyArray<{
 }> = [
   {
     currency: "BYN",
-    // "573 т.р.", "от 573 т.р." — thousands of rubles
-    regex: /(?:от\s+)?(\d[\d\s.,]*)\s*т\.?\s*р\.?/gi,
+    // "573 т.р.", "203 т. ƃ", "от 573 т.р." — thousands (р. / ƃ on realt.by)
+    regex: /(?:от\s+)?(\d[\d\s.,]*)\s*т\.?\s*(?:р\.?|ƃ)/gi,
     multiplier: 1_000,
   },
   {
     currency: "BYN",
     // "1,3 млн р.", "от 1,3 млн р.", "2 млн руб."
-    regex: /(?:от\s+)?(\d[\d\s.,]*)\s*млн\.?\s*(?:р\.?|руб\.?)/gi,
+    regex: /(?:от\s+)?(\d[\d\s.,]*)\s*млн\.?\s*(?:р\.?|руб\.?|ƃ)/gi,
     multiplier: 1_000_000,
   },
   {
     currency: "BYN",
-    // "р." / "р" after amount (e.g. "100 000 р.") — common BYN shorthand
-    regex: /(\d[\d\s.,]*)\s*(?:BYN|б\.?\s*р\.?|руб\.?|р\.?(?![а-яА-ЯёЁa-zA-Z]))/gi,
+    // "р." / "р" / "ƃ" after amount (e.g. "100 000 р.", "262 000 ƃ" on realt.by)
+    regex:
+      /(\d[\d\s.,]*)\s*(?:BYN|б\.?\s*р\.?|руб\.?|ƃ|р\.?(?![а-яА-ЯёЁa-zA-Z]))/gi,
   },
   {
     currency: "BYN",

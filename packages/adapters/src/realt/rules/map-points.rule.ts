@@ -71,7 +71,7 @@ export function finishRealtMapPoints(root: ParentNode): void {
 /**
  * Map placemark prices on realt.by, e.g. inside:
  * `<ymaps><span>573 т.р.</span></ymaps>` → `$179 k` + mirror ` = 573 т.р.`
- * Also "1,3 млн р." / "от 1,3 млн р.".
+ * Also "203 т. ƃ", "1,3 млн р." / "от 1,3 млн р.".
  */
 export const realtMapPointsRule: PriceRule = {
   id: REALT_MAP_POINTS_RULE_ID,
