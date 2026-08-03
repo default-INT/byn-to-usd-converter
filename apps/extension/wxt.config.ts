@@ -7,7 +7,7 @@ export default defineConfig({
   manifest: {
     name: "BYN Конвертер av.by / realt.by / re.kufar.by",
     description: "Показывает суммы в USD на страницах realt.by, re.kufar.by и av.by по официальному курсу НБ РБ",
-    version: "0.0.2",
+    version: "0.0.3",
     permissions: ["storage", "alarms"],
     host_permissions: [
       "https://api.nbrb.by/*",
